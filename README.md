@@ -1,4 +1,4 @@
-# Aula 03 – Primeiro Request HTTP com Python
+# Aula 03 – Primeiro Request HTTP com Python (Asimov Academy)
 
 ## Descrição
 
