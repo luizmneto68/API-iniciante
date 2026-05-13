@@ -1,16 +1,46 @@
 # Biblioteca para fazer requisições HTTP em Python
 import requests
+from pathlib import Path
 
-# URL alvo da requisição
-url = "https://www.google.com"
+def baixar_pagina(url: str, arquivo_saida: str = "pagina.google.html", timeout: int = 10) -> bool:
+    """
+    Faz uma requisição GET e salva o conteúdo HTML em arquivo.
+    
+    Args:
+        url: URL a acessar
+        arquivo_saida: Caminho do arquivo para salvar o HTML
+        timeout: Tempo máximo de espera em segundos
+        
+    Returns:
+        True se bem-sucedido, False caso contrário
+    """
+    try:
+        resposta = requests.get(url, timeout=timeout)
+        resposta.raise_for_status()
+        
+        print(f"Resposta: {resposta}")
+        print(f"Status Code: {resposta.status_code}\n")
+        
+        Path(arquivo_saida).write_text(resposta.text, encoding="utf-8")
+        print(f"✓ HTML salvo em '{arquivo_saida}'")
+        return True
+        
+    except requests.exceptions.Timeout:
+        print("✗ Erro: Requisição excedeu o tempo limite")
+        return False
+    except requests.exceptions.ConnectionError:
+        print("✗ Erro: Falha ao conectar ao servidor")
+        return False
+    except requests.exceptions.HTTPError as e:
+        print(f"✗ Erro HTTP {resposta.status_code}: {e}")
+        return False
+    except requests.exceptions.RequestException as e:
+        print(f"✗ Erro na requisição: {e}")
+        return False
+    except IOError as e:
+        print(f"✗ Erro ao salvar arquivo: {e}")
+        return False
 
-# Realiza uma requisição GET e armazena a resposta
-resposta = requests.get(url)
-
-# Exibe o objeto de resposta (ex: <Response [200]>) e o conteúdo HTML da página
-print(resposta, end="\n\n\n\n")
-print(resposta.text)
-
-# Salva o HTML retornado em um arquivo local para análise
-with open("pagina.google.html", "w", encoding="utf-8") as arquivo:
-    arquivo.write(resposta.text)
+if __name__ == "__main__":
+    url = "https://www.google.com"
+    baixar_pagina(url)
