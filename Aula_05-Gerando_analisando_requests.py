@@ -24,10 +24,10 @@ def enviar_request_post(url: str, params: Dict[str, str], data: Dict[str, Any], 
         print("Erro: Requisição excedeu o tempo limite")
     except requests.exceptions.ConnectionError:
         print("Erro: Falha ao conectar ao servidor")
-    except requests.exceptions.HTTPError as e:
-        print(f"Erro HTTP {resposta.status_code}: {e}")
-    except requests.exceptions.RequestException as e:
-        print(f"Erro na requisição: {e}")
+    except requests.exceptions.HTTPError as error:
+        print(f"Erro HTTP {resposta.status_code}: {error}")
+    except requests.exceptions.RequestException as error:
+        print(f"Erro na requisição: {error}")
 
 if __name__ == "__main__":
     url = "https://httpbin.org/post"
